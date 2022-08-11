@@ -275,14 +275,16 @@ class CurrentFile{
         pos=0;
     }
 
-    private void clearLine(int lineNum_){
-        String printStr= "";
-        String printStr2= "";
-        for(int i=0; i<listOfLines.get(lineNum_).length(); i++){
-            printStr+=" ";
-            printStr2+="\b";
+    private void clearLine(int lineNum_) {
+        String printStr = "";
+        String printStr2 = "";
+        if(listOfLines.size()>lineNum_){
+            for (int i = 0; i < listOfLines.get(lineNum_).length(); i++) {
+                printStr += " ";
+                printStr2 += "\b";
+            }
+            System.out.print(printStr + printStr2);
         }
-        System.out.print(printStr+printStr2);
     }
 
     private void compleateLine(){compleateLine(0);}
