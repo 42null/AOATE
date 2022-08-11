@@ -76,23 +76,30 @@ class CurrentFile{
                     line--;
                 }else if(cCmd[1]=='B'){//DOWN
                     UI.moveBack(4);
-                    
 
                     rewrite4Press();
-                    UI.moveCD();
+//                    UI.moveCD();
 //                    savePos = pos;
-                    if(listOfLines.size()>line+1){listOfLines.add("");}
+//                    if(listOfLines.size()>line+1){listOfLines.add("");}
+                    if(listOfLines.size()>line+1){//Keep within page limits
+                        UI.moveCD();
+                        while(pos < savePos){
+                            pos++;
+                            UI.moveCR();
+                        }
 
-                    while(pos < savePos){
-                        pos++;
-                        UI.moveCR();
+                        while(pos > listOfLines.get(line+1).length()){
+                            pos--;
+                            System.out.print("\b");
+                        }
+                        line++;
+                    }else{
+//                        UI.moveCU();
+                        UI.moveBack(4);
+                        rewrite4Press();
                     }
 
-                    while(pos > listOfLines.get(line+1).length()){
-                        pos--;
-                        System.out.print("\b");
-                    }
-                    line++;
+
                 }else if(cCmd[1]=='D'){//LEFT -- @@@
                     UI.moveBack(4);
                     rewrite4Press();
@@ -193,6 +200,7 @@ class CurrentFile{
                         else{
                             backspace(false);
                             pos--;}
+                        savePos = pos;
                         break;
                     default:
                         controlKeyed = false;
@@ -380,7 +388,6 @@ class CurrentFile{
 
                 myWriter.write(listOfLines.get(i)+"\n");
             }
-            myWriter.write("...");
             myWriter.close();
         } catch (IOException e) {
             System.out.println("An error occurred.");

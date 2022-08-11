@@ -44,12 +44,12 @@ public class UI{
             Runtime.getRuntime().exec(cmd1).waitFor();
             char c = (char) System.in.read();
             Runtime.getRuntime().exec(cmd2).waitFor();
-
+//            System.out.print("\n>>>"+Byte.toUnsignedInt((byte) c)+"<<<");
             if(newLine_)
                 System.out.print("\n");
             return c;
         }catch(Exception e){
-            System.out.println("!!!!!!!!!!!!!!!!!! "+e);
+            System.out.println("Error getting typed char: "+e);
         }
         return '\0';
     }

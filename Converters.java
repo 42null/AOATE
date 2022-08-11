@@ -20,7 +20,7 @@ class Converters{
             do{//ByRow
                 deconstruct = myReader.nextLine();
                 returnList.add(deconstruct);
-            }while(!deconstruct.equals("..."));
+            }while(myReader.hasNext());
             // }while(true);
 
             myReader.close();

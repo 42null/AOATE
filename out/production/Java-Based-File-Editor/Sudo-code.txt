@@ -1,8 +1,33 @@
+Name ideas
+-
+OPTIONS
+- jefe
+- AER
+- Java Operated Software H____
 
+minix
+
+
+File Editor Java
+
+Jay Jay
+Just a FE
+
+JAVE
+
+
+
+J3
+
+Java
+File/Text
+Editor
+
+WINE
+T
 
 
  ^[[5D1;5D for control back
-
 
 
 For CurrentFile.txt
