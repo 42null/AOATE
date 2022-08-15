@@ -1,4 +1,3 @@
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import java.util.ArrayList;
@@ -8,9 +7,6 @@ import java.io.FileWriter;   // Import the FileWriter class
 import java.io.BufferedWriter;
 import java.io.PrintWriter;  // Deleate file contents before saving
 
-
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
 class CurrentFile{
 
     private int line = 0, pos = 0;
@@ -94,9 +90,9 @@ class CurrentFile{
                         }
                         line++;
                     }else{
-//                        UI.moveCU();
                         UI.moveBack(4);
-                        rewrite4Press();
+//                        moveToEndOfLine();//@@@
+//                        rewrite4Press();
                     }
 
 
@@ -145,7 +141,7 @@ class CurrentFile{
                 pos++;
                 savePos = pos;
 
-                compleateLine();
+                completeLine();
                 typed = true;
             }else if(Character.getNumericValue(cCmd[1])==-1){
                 endOfCharacter = true;
@@ -287,8 +283,13 @@ class CurrentFile{
         }
     }
 
-    private void compleateLine(){compleateLine(0);}
-    private void compleateLine(int addSpaces_){
+    private void completeLine(){
+        completeLine(0,true);
+    }
+    private void completeLine(final int addSpaces_){
+        completeLine(addSpaces_,true);
+    }
+    private void completeLine(final int addSpaces_, final boolean moveBack){
         System.out.print(listOfLines.get(line).substring(pos));
         String backStr="";
         for(int i=0;i<addSpaces_;i++){backStr+=" ";}
@@ -298,7 +299,7 @@ class CurrentFile{
         }
         // if(addSpace_)//TODO: Cleanup
         //     backStr+="\b\b";
-        for(int i=0;i<addSpaces_;i++){backStr+="\b";}
+        for(int i=0;i<addSpaces_ && moveBack;i++){backStr+="\b";}
         System.out.print(backStr);
     }
 
@@ -308,7 +309,7 @@ class CurrentFile{
             return;
         }
         System.out.print("\b\b\b");
-        compleateLine(3);
+        completeLine(3);
         String tmpStr = listOfLines.get(line);
         String tmpStr2 = tmpStr.substring(0,pos-1)+tmpStr.substring(pos);
         listOfLines.set(line,tmpStr2);
@@ -321,7 +322,6 @@ class CurrentFile{
         // String tmpStr2 = tmpStr.substring(0,pos)+tmpStr.substring(pos+1);
         // listOfLines.set(line,tmpStr2);
     }
-
     private void rewrite4Press(){rewriteNumPress(4);}
 
     private void rewriteNumPress(int spaces_){
@@ -374,8 +374,6 @@ class CurrentFile{
             PrintWriter writer = new PrintWriter(filePath);
             writer.close();
 
-
-
             // File myObj = new File("filename.txt");
             // if (myObj.createNewFile()) {
             //     System.out.println("File created: " + myObj.getName());
@@ -385,14 +383,17 @@ class CurrentFile{
             // }
             FileWriter myWriter = new FileWriter(filePath,true);
             
-            for(int i=0;i<listOfLines.size();i++){//ByRow
-
-
+            for(int i=0;i<listOfLines.size()-1;i++){//Write to file each row by row. Skip the last line
                 myWriter.write(listOfLines.get(i)+"\n");
             }
-            myWriter.close();
+            try{
+                myWriter.write(listOfLines.get(listOfLines.size()-1));//Instead of including in the loop, for efficiency place in last line by itself without the \n
+                myWriter.close();
+            }catch(ArrayIndexOutOfBoundsException e){
+                System.out.println("Your file is empty");
+            }
         } catch (IOException e) {
-            System.out.println("An error occurred.");
+            System.out.println("An error occurred during writeFile.");
             e.printStackTrace();
         }
     }
