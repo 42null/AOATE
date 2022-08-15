@@ -5,7 +5,7 @@ To open the default file (./Directory/exampleFile4.txt):
 ```
 java Main
 ```
-To open any file (./Directory/exampleFile4.txt):
+To open any file:
 ```
 java Main "<file_path_here>"
 ```
