@@ -92,11 +92,12 @@ class CurrentFile{
                     }else{
                         UI.moveBack(4);
 //                        moveToEndOfLine();//@@@
+                        completeline(false);
 //                        rewrite4Press();
                     }
 
 
-                }else if(cCmd[1]=='D'){//LEFT -- @@@
+                }else if(cCmd[1]=='D'){//LEFT
                     UI.moveBack(4);
                     rewrite4Press();
                         UI.moveCL();
@@ -141,7 +142,7 @@ class CurrentFile{
                 pos++;
                 savePos = pos;
 
-                completeLine();
+                completeline();
                 typed = true;
             }else if(Character.getNumericValue(cCmd[1])==-1){
                 endOfCharacter = true;
@@ -282,14 +283,29 @@ class CurrentFile{
             System.out.print(printStr + printStr2);
         }
     }
+    private void moveToEndOfLine(){
 
-    private void completeLine(){
-        completeLine(0,true);
     }
-    private void completeLine(final int addSpaces_){
-        completeLine(addSpaces_,true);
+
+    private void completeline(){
+        completeline(0,true);
     }
-    private void completeLine(final int addSpaces_, final boolean moveBack){
+    private void completeline(boolean moveBack){
+        if(pos != listOfLines.get(line).length()){
+//            completeline(listOfLines.get(line).length(), moveBack);
+            System.out.print(listOfLines.get(line).substring(pos));
+            while(pos<listOfLines.get(line).length()){
+//                UI.moveCR(); //TODO: Make more efficent
+//                pos++;
+            }
+            pos=listOfLines.get(line).length();
+        }
+//        System.out.print(listOfLines.get(line).substring(listOfLines.get(line).length()-pos));
+    }
+    private void completeline(final int addSpaces_){
+        completeline(addSpaces_,true);
+    }
+    private void completeline(final int addSpaces_, final boolean moveBack){
         System.out.print(listOfLines.get(line).substring(pos));
         String backStr="";
         for(int i=0;i<addSpaces_;i++){backStr+=" ";}
@@ -309,7 +325,7 @@ class CurrentFile{
             return;
         }
         System.out.print("\b\b\b");
-        completeLine(3);
+        completeline(3);
         String tmpStr = listOfLines.get(line);
         String tmpStr2 = tmpStr.substring(0,pos-1)+tmpStr.substring(pos);
         listOfLines.set(line,tmpStr2);
@@ -322,6 +338,7 @@ class CurrentFile{
         // String tmpStr2 = tmpStr.substring(0,pos)+tmpStr.substring(pos+1);
         // listOfLines.set(line,tmpStr2);
     }
+
     private void rewrite4Press(){rewriteNumPress(4);}
 
     private void rewriteNumPress(int spaces_){

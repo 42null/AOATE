@@ -8,7 +8,7 @@ class Main {
     public static void main(String[] args) {
 
 
-        CurrentFile curFil = openFile( args.length>0 ? args[0] : "./Directory/exampleFile4.txt");//"./Directory/exampleFile4.txt" );
+        CurrentFile curFil = openFile( args.length>0 ? args[0] : "./Directory/exampleFile4.txt");
 
         // Console cnsl = System.console();
         // System.out.println(cnsl.readPassword(""));
