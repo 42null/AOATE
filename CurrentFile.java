@@ -41,7 +41,6 @@ class CurrentFile{
         int savePos = pos;
 //        boolean endOfCommandCharacter = false;
 
-
         do{
             boolean moved = false;//Assume did not move
             boolean typed = false;//Assume did not move
@@ -94,8 +93,8 @@ class CurrentFile{
 //                        moveToEndOfLine();//@@@
                         completeline(false);
 //                        rewrite4Press();
+                        UI.moveBack(4);
                     }
-
 
                 }else if(cCmd[1]=='D'){//LEFT
                     UI.moveBack(4);
@@ -291,8 +290,12 @@ class CurrentFile{
         completeline(0,true);
     }
     private void completeline(boolean moveBack){
-        if(pos != listOfLines.get(line).length()){
-//            completeline(listOfLines.get(line).length(), moveBack);
+        if(pos == listOfLines.get(line).length()){
+        System.out.println("-=--www--ssssss-");
+            rewrite4Press();
+            System.out.println("-=-----");
+        }else{
+            //            completeline(listOfLines.get(line).length(), moveBack);
             System.out.print(listOfLines.get(line).substring(pos));
             while(pos<listOfLines.get(line).length()){
 //                UI.moveCR(); //TODO: Make more efficent
@@ -300,6 +303,8 @@ class CurrentFile{
             }
             pos=listOfLines.get(line).length();
         }
+        System.out.println("~~~~~~~~~~~~~~~~ = "+(pos == listOfLines.get(line).length()));
+
 //        System.out.print(listOfLines.get(line).substring(listOfLines.get(line).length()-pos));
     }
     private void completeline(final int addSpaces_){
