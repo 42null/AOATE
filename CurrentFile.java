@@ -89,11 +89,23 @@ class CurrentFile{
                         }
                         line++;
                     }else{
-                        UI.moveBack(4);
-//                        moveToEndOfLine();//@@@
-                        completeline(false);
+                        while(pos < listOfLines.get(line).length()){
+                            pos++;
+                            UI.moveCR();
+                            //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+                        }
+//                        UI.moveBack(4);
+//                        completeline(false);
 //                        rewrite4Press();
-                        UI.moveBack(4);
+//                        UI.moveBack(4);
+//                        moveToEndOfLine();//@@@
+//                        UI.moveBack(4);
+//                        NEED SOME TRUE FERMINE BSSED ON COMPLEATELINE OR OVETOEND
+//                        System.out.print("_");
+//                        UI.moveCL();
+//                        UI.moveCL();
+//                        UI.moveCL();
+//                        UI.moveCL();
                     }
 
                 }else if(cCmd[1]=='D'){//LEFT
@@ -291,20 +303,17 @@ class CurrentFile{
     }
     private void completeline(boolean moveBack){
         if(pos == listOfLines.get(line).length()){
-        System.out.println("-=--www--ssssss-");
             rewrite4Press();
-            System.out.println("-=-----");
         }else{
             //            completeline(listOfLines.get(line).length(), moveBack);
             System.out.print(listOfLines.get(line).substring(pos));
-            while(pos<listOfLines.get(line).length()){
-//                UI.moveCR(); //TODO: Make more efficent
-//                pos++;
+            while(pos<listOfLines.get(line).length() && moveBack){
+                UI.moveCR(); //TODO: Make more efficent
+                pos++;
             }
             pos=listOfLines.get(line).length();
         }
-        System.out.println("~~~~~~~~~~~~~~~~ = "+(pos == listOfLines.get(line).length()));
-
+//        System.out.println("~~~~~~~~~~~~~~~~ = "+(pos == listOfLines.get(line).length()));
 //        System.out.print(listOfLines.get(line).substring(listOfLines.get(line).length()-pos));
     }
     private void completeline(final int addSpaces_){
