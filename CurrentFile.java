@@ -39,6 +39,7 @@ class CurrentFile{
 
         String addToLine = "";
         int savePos = pos;
+        boolean moveBack = true;
 //        boolean endOfCommandCharacter = false;
 
         do{
@@ -50,7 +51,7 @@ class CurrentFile{
             cCmd[0] = cCmd[1];
             cCmd[1] = UI.getTypedChr(false);
 
-            
+
             if(cCmd[0]=='['){
                 endOfCharacter = true;
                 if(cCmd[1]=='A'){//UP
@@ -100,7 +101,7 @@ class CurrentFile{
 //                        UI.moveBack(4);
 //                        moveToEndOfLine();//@@@
 //                        UI.moveBack(4);
-//                        NEED SOME TRUE FERMINE BSSED ON COMPLEATELINE OR OVETOEND
+//                        NEED SOME TRUE ENdLINE BSSED ON COMPLEATELINE OR OVETOEND
 //                        System.out.print("_");
 //                        UI.moveCL();
 //                        UI.moveCL();
@@ -119,22 +120,47 @@ class CurrentFile{
                     rewrite4Press();
                     // UI.moveCR();
                     UI.moveCR();
-
-                    if(pos > listOfLines.get(line).length()){
-                        pos = listOfLines.get(line).length()-2;
-                        System.out.print("\b");
+                    String backspaces = "";
+                    if(pos > listOfLines.get(line).length()-1){
+//                        pos = listOfLines.get(line).length()-2;
+                        while(pos > 0){//For some reason having this only here works
+                            pos--;
+                            backspaces+="\b";
+                        }
+                        pos=0;
+                        UI.moveCR();
                     }else{
                         pos++;
                     }
 
                     while(pos > listOfLines.get(line).length()){//For some reason having this only here works
                         pos--;
-                        System.out.print("\b");
+                        backspaces+="\b";
+                    }
+
+                    if(pos==0){
+                        if(++line < listOfLines.size()){
+                            UI.moveCD();
+                            UI.moveCL();
+                            UI.moveCL();
+                            System.out.print(backspaces);
+                        }else{
+                            line--;//See if this is more efficient
+                            pos = listOfLines.get(line).length();
+//                            moveBack = false;
+//                            UI.moveBack(4);
+                            UI.moveCL();
+                            UI.moveCL();
+                        }
                     }
                     savePos = pos;
                 }
-                UI.moveBack(4);
-            // }else if(cCmd[0]!='[' && !moved){
+                if(moveBack){
+                    UI.moveBack(4);
+                }else{
+                    moveBack = false;//This way for efficiency
+                }
+                // }else if(cCmd[0]!='[' && !moved){
             }else if(((cCmd[0]!='^' && cCmd[1]!='[') &&
                       (cCmd[0]!='[' && cCmd[1]!='[') &&
                       (cCmd[0]!='[' && cCmd[1]!='C') &&
