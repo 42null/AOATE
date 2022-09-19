@@ -112,8 +112,23 @@ class CurrentFile{
                 }else if(cCmd[1]=='D'){//LEFT
                     UI.moveBack(4);
                     rewrite4Press();
-                        UI.moveCL();
+                    UI.moveCL();
                     pos--;
+
+                    if(pos==-1){
+                        if(--line == -1){//Move to < for slightly less efficient but better at correcting?
+                            pos=0;
+                        }else{
+                            UI.moveCU();
+                            String moveForwards = "";
+                            while(pos < listOfLines.get(line).length()){
+                                moveForwards+="\u001B[C";
+                                pos++;
+                            }
+                            System.out.print(moveForwards);
+                        }
+                    }
+
                     savePos = pos;
                 }else if(cCmd[1]=='C'){//RIGHT
                     UI.moveBack(4);
