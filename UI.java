@@ -2,15 +2,20 @@ public class UI{
     public final static String[] cmd1 = {"/bin/sh", "-c", "stty raw </dev/tty"};
     public final static String[] cmd2 = {"/bin/sh", "-c", "stty cooked </dev/tty"};
 
+    public final static String NORTH = "\u001B[A";
+    public final static String EAST  = "\u001B[B";
+    public final static String SOUTH = "\u001B[C";
+    public final static String WEST  = "\u001B[D";
+
     static public void clear(){System.out.print("\033\143");}
 
 
 // CURSOR CONTROOL
     
-    public static void moveCU(){System.out.print("\u001B[A");}
-    public static void moveCD(){System.out.print("\u001B[B");}
-    public static void moveCR(){System.out.print("\u001B[C");}
-    public static void moveCL(){System.out.print("\u001B[D");}
+    public static void moveCU(){System.out.print(NORTH);}
+    public static void moveCD(){System.out.print(EAST);}
+    public static void moveCR(){System.out.print(SOUTH);}
+    public static void moveCL(){System.out.print(WEST);}
 
     public static void moveCUB(){System.out.print("\u001B[A\b\b\b\b");}
     public static void moveCDB(){System.out.print("\u001B[B\b\b\b\b");}

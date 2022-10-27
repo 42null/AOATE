@@ -70,6 +70,9 @@ class CurrentFile{
                     }
 
                     line--;
+
+
+
                 }else if(cCmd[1]=='B'){//DOWN
                     UI.moveBack(4);
 
@@ -95,18 +98,6 @@ class CurrentFile{
                             UI.moveCR();
                             //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
                         }
-//                        UI.moveBack(4);
-//                        completeline(false);
-//                        rewrite4Press();
-//                        UI.moveBack(4);
-//                        moveToEndOfLine();//@@@
-//                        UI.moveBack(4);
-//                        NEED SOME TRUE ENdLINE BSSED ON COMPLEATELINE OR OVETOEND
-//                        System.out.print("_");
-//                        UI.moveCL();
-//                        UI.moveCL();
-//                        UI.moveCL();
-//                        UI.moveCL();
                     }
 
                 }else if(cCmd[1]=='D'){//LEFT
@@ -194,7 +185,7 @@ class CurrentFile{
                 pos++;
                 savePos = pos;
 
-                completeline();
+                completeLine();
                 typed = true;
             }else if(Character.getNumericValue(cCmd[1])==-1){
                 endOfCharacter = true;
@@ -215,30 +206,47 @@ class CurrentFile{
                         return 130;
                     case 9: // Tab, ctrl+i
                         break;
-                    case 13: // enter
+                    case 13: //enter
                         UI.moveBack(2);
                         rewriteNumPress(2);
+//                        UI.moveCU();
+////                        pos=0;
+//                        clearLine(line+1);
+//                        System.out.print("\n");
+//                        while(pos > listOfLines.get(line).length()){System.out.print("\b");}
+//                        reprintScreen(line+1);
+//                        UI.moveCU();
+//                        line++;
+//                        System.out.println("000000000000000000000000000000: "+line);
+//                        reprintScreenFromCurrent();
+                        clearScreenFromCurrentOnyNeeded(line-1,-1);
                         listOfLines.add(line+1,"");
-
-                        line++;
-                            pos=0-1;
-
-                            System.out.print("\n");
-                            clearLine(line+1);
-                            System.out.print("\n");
-                            while(pos > listOfLines.get(line).length()){System.out.print("\b");}
-                            reprintScreen(line+1);
-                            UI.moveCU();
+                        reprintScreen(line);
+//                            insertAndPrintLineAt(line+1,"");
                         break;
                     case 17: //ctrl+q
                         return 130;
                     case 18: //ctrl+r
                         reprintScreen();
-                        // UI.moveCU(); TODO: @@@
+                        //send back to 0/0
+//        for(int i=startingFrom_; i<listOfLines.size(); i++){
+//            UI.moveCU();
+//        }
+//        for(int i=0; i<pos;i++){//Moveback
+//            System.out.print("\b");
+//        }
+//        pos=0;
+//                        for(int i = 0; i < line; i++){//TODO: make more efficient with string
+//                             UI.moveCD();
+//                        }
+//                        for(int i = 0; i < pos; i++){//TODO: make more efficient with string
+//                            UI.moveCR();
+//                        }
                         break;
                     case 19: //ctrl+s
                         // return 5;
-                        UI.moveBack(2);
+                        UI.moveBack(2);//TODO: Merge?
+                        completeLine(2);
                         writeFile();
                         break;
                     case 126: //del
@@ -266,62 +274,114 @@ class CurrentFile{
         }while(true);
     }
 
-    private void reprintScreen(){UI.clear();reprintScreen(0);line=0;}
-    private void reprintScreen(int startingFrom_){
-        // printFile(startingFrom_);
-
-        String printLine="";
-        for(int i = startingFrom_; i < listOfLines.size(); i++){
-            printLine=listOfLines.get(i);
-            for(int j=0; j<listOfLines.get(i+(i>=listOfLines.size()-1?0:1)).length(); j++){
-            // for(int j=0; j<50; j++){
-                printLine+=" ";
-            }
-            for(int j=0; j<200; j++){
-                UI.moveCL();
-            }
-            System.out.print(printLine+"\n");
-            
-        }
-
-
-
-
-        for(int i=startingFrom_; i<listOfLines.size(); i++){
-            UI.moveCU();
-        }
-        for(int i=0; i<pos;i++){//Moveback
-            System.out.print("\b");
-        }
+    private void reprintScreen(){
+        UI.clear();
+        reprintScreen(0);/*line=0*/;
+        line=0;
         pos=0;
+        System.out.print("\033[H");//Move to top left
     }
-    private void reprintScreen(int startingFrom_,int endingFrom_){//@@@
-        // printFile(startingFrom_);
+    private void reprintScreen(int startingFrom_){
+//         printFile(startingFrom_);
+//        String printLine="";
+//        for(int i = startingFrom_; i < listOfLines.size(); i++){
+//            printLine=listOfLines.get(i);
+//            for(int j=0; j<listOfLines.get(i+(i>=listOfLines.size()-1?0:1)).length(); j++){
+//            // for(int j=0; j<50; j++){
+//                printLine+=" ";
+//            }
+//                UI.moveCL();
+//            System.out.print(printLine+"\n");
+//        }
 
-        String printLine="";
-        for(int i = startingFrom_; i < listOfLines.size(); i++){
-            printLine=listOfLines.get(i);
-            for(int j=0; j<listOfLines.get(i+(i>=listOfLines.size()-1?0:1)).length(); j++){
-            // for(int j=0; j<50; j++){
-                printLine+=" ";
+
+//        System.out.print("\033[H");//Move to top left and clears screen
+//        System.out.print("\033[2J");//Clears screen from current to top
+//        printFile();
+        int endingFrom = listOfLines.size();
+        String printLine = "";
+        for(int i = startingFrom_; i < endingFrom; i++){
+            printLine+=listOfLines.get(i)+"\n";
+
+            for(int j=0; j<listOfLines.get(i).length()-1; j++){
+                printLine+=UI.WEST;
             }
-            for(int j=0; j<200; j++){
-                UI.moveCL();
-            }
-            System.out.print(printLine+"\n");
-            
         }
-
-
-
-
-        for(int i=startingFrom_; i<listOfLines.size(); i++){
+        System.out.print(printLine);
+        for (int i = 0; i < endingFrom-startingFrom_; i++) {
             UI.moveCU();
         }
-        for(int i=0; i<pos;i++){//Moveback
-            System.out.print("\b");
+    }
+
+    private void reprintScreenFromCurrent(){
+//        reprintScreen(line,-1);
+    }
+
+    private void insertAndPrintLineAt(int startingFrom_, int endingFrom_){//@@@
+        String printStr = "";
+        for(int i = startingFrom_; i < listOfLines.size(); i++){
+            for(int j=0; j<listOfLines.get(i).length(); j++){
+                UI.moveCL();
+            }
+            for(int j=0; j<listOfLines.get(i).length(); j++){
+                printStr+="#";
+            }
+            System.out.print(printStr);
+            for(int j=0; j<listOfLines.get(i).length(); j++){
+                UI.moveCL();
+            }
+//            System.out.print(printStr);
+            printStr = "";
+//            printStr += listOfLines.get(i);
+            System.out.println(printStr);
+            if(i==startingFrom_){
+//                UI.moveCU();
+            }
+            printStr = "";
+
         }
-        pos=0;
+//        System.out.println(printStr);
+
+        for(int i=startingFrom_; i<listOfLines.size()-1; i++){
+            UI.moveCU();
+        }
+        for(int i=0; i<pos;i++){//Move back
+            UI.moveCR();
+        }
+    }
+
+
+    private void clearScreenFromCurrentOnyNeeded(int startingFrom_, int endingFrom_){//TODO: Optimize
+        String printStr = "";
+        for(int i = startingFrom_; i < listOfLines.size(); i++){
+            for(int j=0; j<listOfLines.get(i).length(); j++){
+                UI.moveCL();
+            }
+            for(int j=0; j<listOfLines.get(i).length(); j++){
+                printStr+=" ";
+            }
+            System.out.print(printStr);
+            for(int j=0; j<listOfLines.get(i).length(); j++){
+                UI.moveCL();
+            }
+//            System.out.print(printStr);
+            printStr = "";
+//            printStr += listOfLines.get(i);
+            System.out.println(printStr);
+            if(i==startingFrom_){
+                UI.moveCU();
+            }
+            printStr = "";
+
+        }
+//        System.out.println(printStr);
+
+        for(int i=startingFrom_; i<listOfLines.size()-1; i++){
+            UI.moveCU();
+        }
+        for(int i=0; i<pos;i++){//Move back
+            UI.moveCR();
+        }
     }
 
     private void clearLine(int lineNum_) {
@@ -339,17 +399,17 @@ class CurrentFile{
 
     }
 
-    private void completeline(){
-        completeline(0,true);
+    private void completeLine(){
+        completeLine(0,true);
     }
-    private void completeline(boolean moveBack){
+    private void completeLine(boolean moveBack){
         if(pos == listOfLines.get(line).length()){
             rewrite4Press();
         }else{
             //            completeline(listOfLines.get(line).length(), moveBack);
             System.out.print(listOfLines.get(line).substring(pos));
             while(pos<listOfLines.get(line).length() && moveBack){
-                UI.moveCR(); //TODO: Make more efficent
+                UI.moveCR(); //TODO: Make more efficient
                 pos++;
             }
             pos=listOfLines.get(line).length();
@@ -357,10 +417,10 @@ class CurrentFile{
 //        System.out.println("~~~~~~~~~~~~~~~~ = "+(pos == listOfLines.get(line).length()));
 //        System.out.print(listOfLines.get(line).substring(listOfLines.get(line).length()-pos));
     }
-    private void completeline(final int addSpaces_){
-        completeline(addSpaces_,true);
+    private void completeLine(final int addSpaces_){
+        completeLine(addSpaces_,true);
     }
-    private void completeline(final int addSpaces_, final boolean moveBack){
+    private void completeLine(final int addSpaces_, final boolean moveBack){
         System.out.print(listOfLines.get(line).substring(pos));
         String backStr="";
         for(int i=0;i<addSpaces_;i++){backStr+=" ";}
@@ -380,7 +440,7 @@ class CurrentFile{
             return;
         }
         System.out.print("\b\b\b");
-        completeline(3);
+        completeLine(3);
         String tmpStr = listOfLines.get(line);
         String tmpStr2 = tmpStr.substring(0,pos-1)+tmpStr.substring(pos);
         listOfLines.set(line,tmpStr2);
