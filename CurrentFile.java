@@ -207,22 +207,12 @@ class CurrentFile{
                     case 9: // Tab, ctrl+i
                         break;
                     case 13: //enter
-                        UI.moveBack(2);
-                        rewriteNumPress(2);
-//                        UI.moveCU();
-////                        pos=0;
-//                        clearLine(line+1);
-//                        System.out.print("\n");
-//                        while(pos > listOfLines.get(line).length()){System.out.print("\b");}
-//                        reprintScreen(line+1);
-//                        UI.moveCU();
-//                        line++;
-//                        System.out.println("000000000000000000000000000000: "+line);
-//                        reprintScreenFromCurrent();
-                        clearScreenFromCurrentOnyNeeded(line-1,-1);
-                        listOfLines.add(line+1,"");
+                        clearScreenFromCurrentOnyNeeded(line,-1);
+                        UI.moveCU();
+                        listOfLines.add(line,"");
                         reprintScreen(line);
-//                            insertAndPrintLineAt(line+1,"");
+                        rewriteNumPress(2);
+                        UI.moveBack(2);
                         break;
                     case 17: //ctrl+q
                         return 130;
@@ -368,9 +358,9 @@ class CurrentFile{
             printStr = "";
 //            printStr += listOfLines.get(i);
             System.out.println(printStr);
-            if(i==startingFrom_){
-                UI.moveCU();
-            }
+//            if(i==startingFrom_){
+//                UI.moveCU();
+//            }
             printStr = "";
 
         }
