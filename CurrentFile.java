@@ -1,11 +1,10 @@
 import java.util.regex.Pattern;
 
 import java.util.ArrayList;
-// import java.lang.ArrayIndexOutOfBounds;
 import java.io.IOException;  // Import the IOException class to handle errors
 import java.io.FileWriter;   // Import the FileWriter class
 import java.io.BufferedWriter;
-import java.io.PrintWriter;  // Deleate file contents before saving
+import java.io.PrintWriter;  // Delete file contents before saving
 
 class CurrentFile{
 
@@ -206,13 +205,35 @@ class CurrentFile{
                         return 130;
                     case 9: // Tab, ctrl+i
                         break;
-                    case 13: //enter
+                    case 13: //Enter
+//                        try{Thread.sleep(1);}catch(InterruptedException e){}
+
+                        listOfLines.add(line+1,listOfLines.get(line).substring(pos));
+                        String tmpStore = listOfLines.get(line).substring(0,pos);
+
+                        listOfLines.remove(line);
+//
                         clearScreenFromCurrentOnyNeeded(line,-1);
+                        listOfLines.add(line,tmpStore);
+                        savePos = pos;
                         UI.moveCU();
-                        listOfLines.add(line,"");
+                        for(int i=0; i< (listOfLines.get(line+1).length())+2; i++){
+                            System.out.print(" ");
+                        }
+                        for(int i=0; i< (listOfLines.get(line+1).length())+2; i++){
+                            UI.moveCL();
+                        }
+//                        savePos+=2;
+                        UI.moveCD();
+                        for (int i = 0; i < savePos+2; i++) {
+                            UI.moveCL();
+                        }
+                        UI.moveCU();
                         reprintScreen(line);
-                        rewriteNumPress(2);
-                        UI.moveBack(2);
+                        UI.moveCD();
+                        pos = 0;
+                        savePos = 0;
+                        line++;
                         break;
                     case 17: //ctrl+q
                         return 130;
@@ -447,8 +468,8 @@ class CurrentFile{
     private void rewrite4Press(){rewriteNumPress(4);}
 
     private void rewriteNumPress(int spaces_){
-        // if(line < 0) line = 0;
-        // if(pos < 0) pos = 0;
+//         if(line < 0) line = 0;
+//         if(pos < 0) pos = 0;
 
         int end = pos+spaces_;
         String addsToEnd = "";//TODO: MAKE MORE EFFICENT
@@ -474,7 +495,7 @@ class CurrentFile{
             end = listOfLines.get(line).length();//@@@_LOOKHERE
         }
 
-        System.out.print(listOfLines.get(line).substring(pos,end)+addsToEnd);
+        System.out.print(listOfLines.get(line).substring(pos, Math.max(end, pos))+addsToEnd);
         // +"~~"+spacesNeeded+"~~");
                 // System.out.print("\n\n\n\n\n\nSPACESNEEDED: ("+(end - listOfLines.get(line).length())+")");
 
