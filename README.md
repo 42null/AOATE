@@ -1,5 +1,5 @@
 # AOATE
-### <u>A</u>bsolutely <u>O</u>nly <u>A</u>nother <u>T</u>erminal text <u>E</u>ditor
+### <u>A</u>bsolutely <u>O</u>nly <u>A</u>nother <u>T</u>erminal Text <u>E</u>ditor
 
 
 <small>*Name not yet set in stone, suggestions welcome.</small>
