@@ -1,39 +1,23 @@
-Name ideas
--
-OPTIONS
-- jefe
-- AER
-- Java Operated Software H____
-
-minix
-
-
-File Editor Java
-
-Jay Jay
-Just a FE
-
-JAVE
-
-
-
-J3
-
-Java
-File/Text
-Editor
-
-WINE
-T
-
-
- ^[[5D1;5D for control back
-
-
-For CurrentFile.txt
-
-
-if up
-    lastWasUpdown = true
-    if not secondLastWas, savepos = pos
-    pos < savePos move right
+//                        listOfLines.add(line+1,listOfLines.get(line).substring(pos));//New line from existing after pos where enter was hit
+//                        String tmpStore = listOfLines.get(line).substring(0,pos);//The rest of that line, stored so clearScreen can work with existing date
+//                        clearScreenFromCurrentOnyNeeded(line,-1);
+//
+//                        listOfLines.add(line,tmpStore);
+//                        String clearingMovement = ""; //Created as a string here to avoid calling System.out.print... repeatedly for efficiency
+//                        clearingMovement+=UI.NORTH;
+//                        for(int i=0; i < listOfLines.get(line-1).length()+2; i++){//TODO: Make more efficient with mutable
+//                            clearingMovement = "#"+clearingMovement;
+//                            clearingMovement+=UI.WEST;
+//                        }
+////                        clearingMovement+="@"+UI.WEST;
+//                        clearingMovement+=("\n");//Cursor also needs to move down, was already moved up to assist clearing the screen
+//                        for(int i=0; i < pos+1; i++){
+//                            clearingMovement+=UI.WEST;//Cursor moves back to pos 0 while also taking care of the extra 2 spaces for keycode
+//                        }
+//                        clearingMovement+=UI.NORTH;//Move up to where cursor was before enter
+//                        System.out.print(clearingMovement);//Applies above work to clear the line where it needs to be replaced and move to new printing position
+//                        reprintScreen(line);
+//                        UI.moveCD();//reprintScreen places where it was before enter, need to move back down
+//                        pos = 0;
+//                        savePos = 0;
+//                        line++;

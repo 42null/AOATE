@@ -10,11 +10,7 @@ class Main {
 
         CurrentFile curFil = openFile( args.length>0 ? args[0] : "./Directory/exampleFile4.txt");
 
-        // Console cnsl = System.console();
-        // System.out.println(cnsl.readPassword(""));
-
         UI.clear();
-// getValues();
         curFil.printFile();
         for (int i = 0; i < curFil.getListSize(); i++) {
             UI.moveCU();
@@ -34,9 +30,9 @@ class Main {
         }
     }
 
-    private static CurrentFile openFile(String fileLocaton_){
+    private static CurrentFile openFile(String fileLocation_){
 
-        CurrentFile openedFile = new CurrentFile(fileLocaton_);
+        CurrentFile openedFile = new CurrentFile(fileLocation_);
         return openedFile;
     }
 
