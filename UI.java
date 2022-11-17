@@ -35,11 +35,6 @@ public class UI{
         System.out.print(tmpStr);
     }
 
-    // public static void moveCU(boolean del_){System.out.print((del_? "\b\b\b\b":"")+"    \b\b\b\b\u001B[A");}
-    // public static void moveCD(boolean del_){System.out.print((del_? "\b\b\b\b":"")+"    \b\b\b\b\u001B[B");}
-    // public static void moveCR(boolean del_){System.out.print((del_? "\b\b\b\b":"")+"    \b\b\b\b\u001B[C");}
-    // public static void moveCL(boolean del_){System.out.print((del_? "\b\b\b\b":"")+"    \b\b\b\b\u001B[D");}
-
 
     static public char getTypedChr(){
         return getTypedChr(true);
@@ -49,7 +44,6 @@ public class UI{
             Runtime.getRuntime().exec(cmd1).waitFor();
             char c = (char) System.in.read();
             Runtime.getRuntime().exec(cmd2).waitFor();
-//            System.out.print("\n>>>"+Byte.toUnsignedInt((byte) c)+"<<<");
             if(newLine_)
                 System.out.print("\n");
             return c;

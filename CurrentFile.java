@@ -1,8 +1,8 @@
 import java.util.regex.Pattern;
 
 import java.util.ArrayList;
-import java.io.IOException;  // Import the IOException class to handle errors
-import java.io.FileWriter;   // Import the FileWriter class
+import java.io.IOException;
+import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.io.PrintWriter;  // Delete file contents before saving
 
@@ -14,8 +14,6 @@ class CurrentFile {
     
     
     public int getListSize(){return listOfLines.size();};
-
-    // private int presentLine
 
     public CurrentFile(String filePath_){
         filePath = filePath_;
@@ -31,28 +29,18 @@ class CurrentFile {
 
     public int editFile(){
         char[] cCmd = {'\0','\0'};
-        String lsCmd = "";
-        boolean lastWasUpDown = false, secondLastWasUpDown = false;
-        // Pattern regPat = Pattern.compile(".*i[a-z].*");
         Pattern regPat = Pattern.compile("[a-z]|[A-Z]|[0-9]");
 
-        String addToLine = "";
         int savePos = pos;
         boolean moveBack = true;
-//        boolean endOfCommandCharacter = false;
 
         do{
-            boolean moved = false;//Assume did not move
-            boolean typed = false;//Assume did not move
-            boolean controlKeyed = false;
-            boolean endOfCharacter = false;
 
             cCmd[0] = cCmd[1];
             cCmd[1] = UI.getTypedChr(false);
 
 
             if(cCmd[0]=='['){
-                endOfCharacter = true;
                 if(cCmd[1]=='A'){//UP
                     UI.moveBack(4);
                     rewrite4Press();
@@ -150,10 +138,8 @@ class CurrentFile {
                             UI.moveCL();
                             System.out.print(backspaces);
                         }else{
-                            line--;//See if this is more efficient
+                            line--;//TODO://See if this is more efficient
                             pos = listOfLines.get(line).length();
-//                            moveBack = false;
-//                            UI.moveBack(4);
                             UI.moveCL();
                             UI.moveCL();
                         }
@@ -165,18 +151,12 @@ class CurrentFile {
                 }else{
                     moveBack = false;//This way for efficiency
                 }
-                // }else if(cCmd[0]!='[' && !moved){
             }else if(((cCmd[0]!='^' && cCmd[1]!='[') &&
                       (cCmd[0]!='[' && cCmd[1]!='[') &&
                       (cCmd[0]!='[' && cCmd[1]!='C') &&
                       (cCmd[1]!='\0') &&
                       (regPat.matcher(cCmd[1]+"").find()) ||
-                    //   ( && !(Character.getNumericValue( (cCmd[1]+"").charAt(0))==-1)) ||
                        cCmd[1]==' ')){
-                endOfCharacter = true;
-
-                // }else if((cCmd[0]!='^' && cCmd[1]!='[') && true){
-                addToLine = cCmd[1]+"";//TODO: Allow special modifiers to change this.
                 String tmpStr = listOfLines.get(line);
                 
                 String tmpStr2 = tmpStr.substring(0,pos)+cCmd[1]+tmpStr.substring(pos);
@@ -185,9 +165,7 @@ class CurrentFile {
                 savePos = pos;
 
                 completeLine();
-                typed = true;
             }else if(Character.getNumericValue(cCmd[1])==-1){
-                endOfCharacter = true;
 
                 //ATTEMPTNG TO KEEP TO CONTENTION WITH EXIT CODES - https://tldp.org/LDP/abs/html/exitcodes.html
                 // 130 = ctrl+c
@@ -196,7 +174,6 @@ class CurrentFile {
                 5 = save
                 
                 */
-                controlKeyed = true;//Assume that control exists, if switch defaults then it is set to false again.
                 switch((byte) cCmd[1] ){
 
                     case 1: //ctrl+a
@@ -270,7 +247,6 @@ class CurrentFile {
                         savePos = pos;
                         break;
                     default:
-                        controlKeyed = false;
                         break;
                 }
             }
@@ -278,9 +254,6 @@ class CurrentFile {
             if(pos < 0) pos =0;
             if(line< 0) line=0;
 
-        
-            
-            
         }while(true);
     }
 
@@ -291,6 +264,7 @@ class CurrentFile {
         pos=0;
         System.out.print("\033[H");//Move to top left
     }
+
     private void reprintScreen(int startingFrom_){
         int endingFrom = listOfLines.size();
         String printLine = "";
@@ -369,8 +343,6 @@ class CurrentFile {
             }
             pos=listOfLines.get(line).length();
         }
-//        System.out.println("~~~~~~~~~~~~~~~~ = "+(pos == listOfLines.get(line).length()));
-//        System.out.print(listOfLines.get(line).substring(listOfLines.get(line).length()-pos));
     }
     private void completeLine(final int addSpaces_){
         completeLine(addSpaces_,true);
@@ -379,13 +351,10 @@ class CurrentFile {
         System.out.print(listOfLines.get(line).substring(pos));
         String backStr="";
         for(int i=0;i<addSpaces_;i++){backStr+=" ";}
-        // for(int i=0; i<listOfLines.get(line).length()-pos+(addSpace_?1:0);i++){
         for(int i=0; i<listOfLines.get(line).length()-pos;i++){
             backStr+="\b";
         }
-        // if(addSpace_)//TODO: Cleanup
-        //     backStr+="\b\b";
-        for(int i=0;i<addSpaces_ && moveBack;i++){backStr+="\b";}
+        for(int i=0;i<addSpaces_ && moveBack;i++){backStr+=UI.WEST;}
         System.out.print(backStr);
     }
 
@@ -424,31 +393,11 @@ class CurrentFile {
             addsToEnd+=" ";
         }
 
-        // if(listOfLines.get(line).length()-1 < end){
-        //     end = listOfLines.get(line).length();
-        //     for(int i=0; i < end - (pos+4); i++){
-        //         addsToEnd.concat("~");
-        //     }
-        // }
-        // System.out.print(listOfLines.get(line).substring(pos,end-spacesNeeded)+addsToEnd);
-        // for(int i=0; i < spacesNeeded; i++ ){
-        //     pos--;
-        // }
-
         if(end > listOfLines.get(line).length()-1){
             end = listOfLines.get(line).length();//@@@_LOOKHERE
         }
 
         System.out.print(listOfLines.get(line).substring(pos, Math.max(end, pos))+addsToEnd);
-        // +"~~"+spacesNeeded+"~~");
-                // System.out.print("\n\n\n\n\n\nSPACESNEEDED: ("+(end - listOfLines.get(line).length())+")");
-
-        // for(int i=0; i < 40; i++){
-        //     UI.moveCU();
-        // }
-        // for(int i=0; i < 40; i++){
-            // UI.moveCL();
-        // }
 
     }
 
