@@ -44,29 +44,30 @@ class CurrentFile {
                 if(cCmd[1]=='A'){//UP
                     UI.moveBack(4);
                     rewrite4Press();
-                    UI.moveCU();
+                    if(line > 0){//Keep within page limits
+                        UI.moveCU();
 
-                    while(pos < savePos){
-                        pos++;
-                        UI.moveCR();
+                        while(pos < savePos){
+                            pos++;
+                            UI.moveCR();
+                        }
+
+                        while(pos > listOfLines.get(line-(line==0?0:1)).length()){
+                            pos--;
+                            System.out.print("\b");
+                        }
+
+                        line--;
+                    }else{
+                        while(pos > 0){//Move up on first line to move to front of the very start
+                            pos--;
+                            UI.moveCL();
+                        }
                     }
-
-                    while(pos > listOfLines.get(line-(line==0?0:1)).length()){
-                        pos--;
-                        System.out.print("\b");
-                    }
-
-                    line--;
-
-
 
                 }else if(cCmd[1]=='B'){//DOWN
                     UI.moveBack(4);
-
                     rewrite4Press();
-//                    UI.moveCD();
-//                    savePos = pos;
-//                    if(listOfLines.size()>line+1){listOfLines.add("");}
                     if(listOfLines.size()>line+1){//Keep within page limits
                         UI.moveCD();
                         while(pos < savePos){
@@ -80,10 +81,9 @@ class CurrentFile {
                         }
                         line++;
                     }else{
-                        while(pos < listOfLines.get(line).length()){
+                        while(pos < listOfLines.get(line).length()){//Down on last line moves to end of last line
                             pos++;
                             UI.moveCR();
-                            //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
                         }
                     }
 
