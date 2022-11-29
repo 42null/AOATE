@@ -7,21 +7,19 @@ import java.util.Scanner; // Import the Scanner class to read text files
 
 class Converters{
 
-    public static ArrayList<String> fromFile(String filepath_/*, String fileName_*/){
+    public static ArrayList<String> fromFile(String filepath/*, String fileName_*/){
 
         ArrayList<String> returnList = new ArrayList<String>();
 
         try{
-            File textFile = new File("./"+filepath_);
+            File textFile = new File("./"+filepath);
             Scanner myReader = new Scanner(textFile);
 
             String deconstruct;
-            // while(!myReader.nextLine.isEmpty()){//ByRow
             do{//ByRow
                 deconstruct = myReader.nextLine();
                 returnList.add(deconstruct);
             }while(myReader.hasNext());
-            // }while(true);
 
             myReader.close();
         }catch(Exception e){System.out.println("Error with Creation file :"+e);}

@@ -1,27 +1,24 @@
-import java.io.Console;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
-
 class Main {
 
     public static void main(String[] args) {
+        Edit curFil = openFile( args.length>0 ? args[0] : "./Directory/exampleFile4.txt");
+        int exitCode;
 
+        do{
+            UI.clear();
 
-        CurrentFile curFil = openFile( args.length>0 ? args[0] : "./Directory/exampleFile4.txt");
+            curFil.printFile();
+            for (int i = 0; i < curFil.getListSize(); i++) {
+                UI.moveCU();
+            }
+            exitCode = curFil.editFile();
+            switch(exitCode){
+                case 5: //Save
+                    curFil.writeFile();//Save the file
+                    break;
+            }
+        }while(exitCode != 1);//Save
 
-        UI.clear();
-        curFil.printFile();
-        for (int i = 0; i < curFil.getListSize(); i++) {
-            UI.moveCU();
-        }
-        int exitCode;//NotSet
-        exitCode = curFil.editFile();
-        if(exitCode==5)
-            curFil.writeFile();//Save
-
-        UI.clear();
-        System.out.print("````````````````");
     }
 
     static private void getValues(){
@@ -30,9 +27,8 @@ class Main {
         }
     }
 
-    private static CurrentFile openFile(String fileLocation_){
-
-        CurrentFile openedFile = new CurrentFile(fileLocation_);
+    private static Edit openFile(String fileLocation){
+        Edit openedFile = new Edit(fileLocation);
         return openedFile;
     }
 
