@@ -236,17 +236,13 @@ class Edit {
                     case 19: //ctrl+s
                         UI.moveBack(2);//TODO: Merge?
                         completeLine(2);
-                        writeFile();
+//                        writeFile();
                         return 5;
 //                    break;
                     case 126: //del
                         break;
                     case 127: //Backspace
-                        if(pos<1)
-                            backspace(true);
-                        else{
-                            backspace(false);
-                            pos--;}
+                        backspace(false);
                         savePos = pos;
                         break;
                     default:
@@ -282,10 +278,6 @@ class Edit {
         for(int i=0; i < endingFrom-startingFrom; i++){
             UI.moveCU();
         }
-    }
-
-    private void reprintScreenFromCurrent(){
-//        reprintScreen(line,-1);
     }
 
     private void clearScreenFromCurrentOnlyNeeded(int startingFrom, int endingFrom){//TODO: Optimize
@@ -362,15 +354,32 @@ class Edit {
     }
 
     private void backspace(boolean justRewrite){
-        if(justRewrite){
-            System.out.print("\b\b"+listOfLines.get(line).substring(0,(listOfLines.get(line).length()<2? listOfLines.get(line).length():2))+"\b\b");
-            return;
-        }
+//        if(pos < 1){//Should never be less than 0 but just in case
+//            System.out.print("\b\b"+listOfLines.get(line).substring(0,(listOfLines.get(line).length()<2? listOfLines.get(line).length():2))+"\b\b");
+//            return;
+//        }
         System.out.print("\b\b\b");
         completeLine(3);
         String tmpStr = listOfLines.get(line);
-        String tmpStr2 = tmpStr.substring(0,pos-1)+tmpStr.substring(pos);
-        listOfLines.set(line,tmpStr2);
+        if(pos < 1){
+            if(line <1){
+                return;
+            }
+            pos = listOfLines.get(line-1).length();//In case of very long lines?
+            listOfLines.set(line,listOfLines.get(line-1)+tmpStr);
+            line--;
+            listOfLines.remove(line);
+            clearScreenFromCurrentOnlyNeeded(line,-1);
+            UI.moveCU(2);
+            UI.moveCL(pos);
+            reprintScreen(line);
+            UI.moveCR(pos);
+            pos++;//TODO: Figure out if this is nessery with switch above to length-1
+        }else{
+            String tmpStr2 = tmpStr.substring(0,pos-1)+tmpStr.substring(pos);
+            listOfLines.set(line,tmpStr2);
+        }
+        pos--;
     }
 
     private void deleate(){

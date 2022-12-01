@@ -21,7 +21,36 @@ public class UI{
     public static void moveCDB(){System.out.print("\u001B[B\b\b\b\b");}
     public static void moveCRB(){System.out.print("\u001B[C\b\b\b\b");}
     public static void moveCLB(){System.out.print("\u001B[D\b\b\b\b");}
-    
+
+    public static void moveCU(int times){
+        String printHolder = "";//Store as variable to avoid unnecessary calls to System
+        for(int i = 0; i < times; i++){
+            printHolder+="\u001B[A";
+        }
+        System.out.print(printHolder);
+    }
+    public static void moveCD(int times){
+        String printHolder = "";//Store as variable to avoid unnecessary calls to System
+        for(int i = 0; i < times; i++){
+            printHolder+="\u001B[B";
+        }
+        System.out.print(printHolder);
+    }
+    public static void moveCR(int times){
+        String printHolder = "";//Store as variable to avoid unnecessary calls to System
+        for(int i = 0; i < times; i++){
+            printHolder+="\u001B[C";
+        }
+        System.out.print(printHolder);
+    }
+    public static void moveCL(int times){
+        String printHolder = "";//Store as variable to avoid unnecessary calls to System
+        for(int i = 0; i < times; i++){
+            printHolder+="\u001B[D";
+        }
+        System.out.print(printHolder);
+    }
+
     public static void moveCU(boolean del){System.out.print("\b\b\b\b    \b\b\b\b\u001B[A");}
     public static void moveCD(boolean del){System.out.print("\b\b\b\b    \b\b\b\b\u001B[B");}
     public static void moveCR(boolean del){System.out.print("\b\b\b\b    \b\b\b\b\u001B[C");}
