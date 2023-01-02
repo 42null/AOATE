@@ -1,3 +1,6 @@
+import java.awt.*;
+import java.util.Scanner;
+
 public class UI{
     public final static String[] cmd1 = {"/bin/sh", "-c", "stty raw </dev/tty"};
     public final static String[] cmd2 = {"/bin/sh", "-c", "stty cooked </dev/tty"};
@@ -9,7 +12,49 @@ public class UI{
 
     static public void clear(){System.out.print("\033\143");}
 
+// DYNAMIC INFO HELPERS
 
+
+private static String getInput() {
+    StringBuilder sb = new StringBuilder();
+    final Scanner scanner = new Scanner(System.in);
+    String line = scanner.next();
+//    String line2 = scanner.
+
+//        sb.append(line).append(System.lineSeparator());
+////    }
+//    return sb.length() == 0 ? null : sb.toString();
+    return line;
+}
+    static public Dimension getTerminalDimensions(){//TODO: BUG - only works once, then always returns the same and does not do rows yet until enter is pressed
+//                        "\u001b[s"             // save cursor position
+//                        "\u001b[5000;5000H"    // move to col 5000 row 5000
+//                        "\u001b[6n"            // request cursor position
+//                        "\u001b[u"             // restore cursor position
+        System.out.print("\u001b[s");//Save the cursor position to be restored later
+
+        System.out.print("\u001b[0;0H");// Move to local top left of the screen
+//        System.out.print("\u001b[999999;999999H");// Move to local top left of the screen
+        UI.moveCR(500);
+        String read = null;
+        try {
+//            Runtime.getRuntime().exec(cmd2).waitFor();
+            System.out.print("\u001b[6n"+"\n\n\n\n\n\n\n\n\n");// Request cursor position
+
+            read = getInput();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.print("\u001b[0;0H");
+        System.out.print("\u001b[u");//Restore the cursor position using saved position
+//        read
+
+        System.out.println("__"+read+"__");
+//        [[1;134R
+        int columns = Integer.parseInt(read.substring(read.indexOf(";")+1,read.length()-1));
+        int rows = 0;
+        return new Dimension(columns,-1);
+    }
 // CURSOR CONTROL
     
     public static void moveCU(){System.out.print(UP);}
@@ -17,10 +62,6 @@ public class UI{
     public static void moveCR(){System.out.print(DOWN);}
     public static void moveCL(){System.out.print(LEFT);}
 
-    public static void moveCUB(){System.out.print("\u001B[A\b\b\b\b");}
-    public static void moveCDB(){System.out.print("\u001B[B\b\b\b\b");}
-    public static void moveCRB(){System.out.print("\u001B[C\b\b\b\b");}
-    public static void moveCLB(){System.out.print("\u001B[D\b\b\b\b");}
 
     public static void moveCU(int times){
         String printHolder = "";//Store as variable to avoid unnecessary calls to System

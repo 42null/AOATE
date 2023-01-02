@@ -1,10 +1,7 @@
+import java.io.*;
 import java.util.regex.Pattern;
 
 import java.util.ArrayList;
-import java.io.IOException;
-import java.io.FileWriter;
-import java.io.BufferedWriter;
-import java.io.PrintWriter;  // Delete file contents before saving
 
 import static java.lang.Thread.sleep;
 
@@ -13,8 +10,11 @@ class Edit {
     private int line = 0, pos = 0;
     private String filePath;
     private ArrayList<String> listOfLines;
-    
-    
+
+    private String lineOverflowLeftIndicator = "<..";
+    private String lineOverflowRightIndicator = "..>";
+    private int columns = (int) UI.getTerminalDimensions().getWidth();//-1;
+
     public int getListSize(){return listOfLines.size();};
 
     public Edit(String filePath){
@@ -25,7 +25,18 @@ class Edit {
     public void printFile(){printFile(0);}
     public void printFile(int startingFrom){
         for(int i = startingFrom; i < listOfLines.size(); i++){
-            System.out.print(listOfLines.get(i)+"\n");
+            if(listOfLines.get(i).length() > columns){
+                if(i == line && pos > columns){//Current line being edited on
+                    System.out.print(lineOverflowLeftIndicator+listOfLines.get(i).substring(pos-columns+lineOverflowRightIndicator.length(),columns-lineOverflowRightIndicator.length())+lineOverflowRightIndicator+"\n");
+
+                }else{
+//                    lineOverflowLeftIndicator
+//                int displayableSpaceForLineText = lineOverflowLeftIndicator;
+                    System.out.print(listOfLines.get(i).substring(0,columns-lineOverflowRightIndicator.length())+lineOverflowRightIndicator+"\n");
+                }
+            }else{
+                System.out.print(listOfLines.get(i)+"\n");
+            }
         }
     }
 
@@ -217,7 +228,14 @@ class Edit {
                     case 17: //ctrl+q
                         return 130;
                     case 18: //ctrl+r
-                        reprintScreen();
+//                        reprintScreen();
+//                        clearScreenFromCurrentOnlyNeeded(line,-1);
+//                        System.out.println("TEst");
+
+//                        System.out.println("TEST: "+(int) UI.getTerminalDimensions().getWidth());
+                        int terminalWidth = (int) UI.getTerminalDimensions().getWidth();
+                        System.out.println(":"+terminalWidth+":");
+
                         //send back to 0/0
 //        for(int i=startingFrom; i<listOfLines.size(); i++){
 //            UI.moveCU();
@@ -319,9 +337,6 @@ class Edit {
             System.out.print(printStr + printStr2);
         }
     }
-    private void moveToEndOfLine(){
-
-    }
 
     private void completeLine(){
         completeLine(0,true);
@@ -354,10 +369,6 @@ class Edit {
     }
 
     private void backspace(boolean justRewrite){
-//        if(pos < 1){//Should never be less than 0 but just in case
-//            System.out.print("\b\b"+listOfLines.get(line).substring(0,(listOfLines.get(line).length()<2? listOfLines.get(line).length():2))+"\b\b");
-//            return;
-//        }
         System.out.print("\b\b\b");
         completeLine(3);
         String tmpStr = listOfLines.get(line);
@@ -374,7 +385,7 @@ class Edit {
             UI.moveCL(pos);
             reprintScreen(line);
             UI.moveCR(pos);
-            pos++;//TODO: Figure out if this is nessery with switch above to length-1
+            pos++;//TODO: Figure out if this is necessary with switch above to length-1
         }else{
             String tmpStr2 = tmpStr.substring(0,pos-1)+tmpStr.substring(pos);
             listOfLines.set(line,tmpStr2);
