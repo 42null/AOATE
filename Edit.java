@@ -1,9 +1,9 @@
+import javax.xml.bind.SchemaOutputResolver;
 import java.io.*;
 import java.util.regex.Pattern;
 
 import java.util.ArrayList;
 
-import static java.lang.Thread.sleep;
 
 class Edit {
 
@@ -13,27 +13,23 @@ class Edit {
 
     private String lineOverflowLeftIndicator = "<..";
     private String lineOverflowRightIndicator = "..>";
-    private int columns = (int) UI.getTerminalDimensions().getWidth();//-1;
+    private int columns = -1;
+    private int rows = -1;
 
-    public int getListSize(){return listOfLines.size();};
-
-    public Edit(String filePath){
+    public Edit(String filePath, int columns, int rows){
         this.filePath = filePath;
+        this.columns = columns;
+        this.rows = rows;
         listOfLines = Converters.fromFile(filePath);
     }
+
+    public int getListSize(){return listOfLines.size();};
 
     public void printFile(){printFile(0);}
     public void printFile(int startingFrom){
         for(int i = startingFrom; i < listOfLines.size(); i++){
             if(listOfLines.get(i).length() > columns){
-                if(i == line && pos > columns){//Current line being edited on
-                    System.out.print(lineOverflowLeftIndicator+listOfLines.get(i).substring(pos-columns+lineOverflowRightIndicator.length(),columns-lineOverflowRightIndicator.length())+lineOverflowRightIndicator+"\n");
-
-                }else{
-//                    lineOverflowLeftIndicator
-//                int displayableSpaceForLineText = lineOverflowLeftIndicator;
-                    System.out.print(listOfLines.get(i).substring(0,columns-lineOverflowRightIndicator.length())+lineOverflowRightIndicator+"\n");
-                }
+                System.out.print(listOfLines.get(i).substring(0,columns-lineOverflowRightIndicator.length())+lineOverflowRightIndicator+"\n");
             }else{
                 System.out.print(listOfLines.get(i)+"\n");
             }
@@ -122,11 +118,35 @@ class Edit {
 
                     savePos = pos;
                 }else if(cCmd[1]=='C'){//RIGHT
-                    UI.moveBack(4);
-                    rewrite4Press();
-                    // UI.moveCR();
-                    UI.moveCR();
                     String backspaces = "";
+
+                    if(pos > this.columns-lineOverflowLeftIndicator.length()-lineOverflowLeftIndicator.length()){
+                        UI.moveCL(500);
+                        for (int i = 0; i < this.columns; i++) {
+                            System.out.print(" ");
+                        }
+                        UI.moveCL(500);
+//                        int lineLengthDisplayable = pos-lineOverflowLeftIndicator.length()-lineOverflowRightIndicator.length();
+//                        if(listOfLines.get(line).length() > lineLengthDisplayable){
+//                            if(listOfLines.get(line).length() ){
+//
+//                            }
+//                        }
+                        int spacesOut = pos-lineOverflowLeftIndicator.length()-lineOverflowRightIndicator.length();
+
+//                        String lineOut;//=listOfLines.get(line).substring(spacesOut,(Math.min(listOfLines.get(line).length()-1,spacesOut+this.columns-lineOverflowLeftIndicator.length())));
+
+                        int substringStart = pos+lineOverflowLeftIndicator.length();
+
+                        System.out.print(lineOverflowLeftIndicator);
+                        System.out.print(listOfLines.get(line).substring(substringStart,Math.min(listOfLines.get(line).length()-2,substringStart+columns-lineOverflowLeftIndicator.length()-lineOverflowRightIndicator.length())));
+                        System.out.print(lineOverflowRightIndicator);
+                        UI.moveCL(this.columns-lineOverflowLeftIndicator.length());
+                    }else{
+                        UI.moveBack(4);
+                        rewrite4Press();
+                        UI.moveCR();
+                    }
                     if(pos > listOfLines.get(line).length()-1){
 //                        pos = listOfLines.get(line).length()-2;
                         while(pos > 0){//For some reason having this only here works
@@ -193,6 +213,7 @@ class Edit {
                         System.out.print("\n\n\n\n\n\n"+listOfLines);
                     case 3: //ctrl+c
                         UI.clear();
+                        System.out.println("Closed file without saving.");
                         return 1;
                     case 9: // Tab, ctrl+i
                         break;
@@ -233,8 +254,8 @@ class Edit {
 //                        System.out.println("TEst");
 
 //                        System.out.println("TEST: "+(int) UI.getTerminalDimensions().getWidth());
-                        int terminalWidth = (int) UI.getTerminalDimensions().getWidth();
-                        System.out.println(":"+terminalWidth+":");
+//                        int terminalWidth = (int) UI.getTerminalDimensions().getWidth();
+//                        System.out.println(":"+terminalWidth+":");
 
                         //send back to 0/0
 //        for(int i=startingFrom; i<listOfLines.size(); i++){

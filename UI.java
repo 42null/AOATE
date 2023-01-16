@@ -18,42 +18,36 @@ public class UI{
 private static String getInput() {
     StringBuilder sb = new StringBuilder();
     final Scanner scanner = new Scanner(System.in);
-    String line = scanner.next();
-//    String line2 = scanner.
-
-//        sb.append(line).append(System.lineSeparator());
-////    }
-//    return sb.length() == 0 ? null : sb.toString();
-    return line;
+    return scanner.next();
 }
-    static public Dimension getTerminalDimensions(){//TODO: BUG - only works once, then always returns the same and does not do rows yet until enter is pressed
+
+    static public Dimension getTerminalDimensions(String message){//TODO: BUG - only works once, then always returns the same and does not do rows yet until enter is pressed
 //                        "\u001b[s"             // save cursor position
 //                        "\u001b[5000;5000H"    // move to col 5000 row 5000
 //                        "\u001b[6n"            // request cursor position
 //                        "\u001b[u"             // restore cursor position
         System.out.print("\u001b[s");//Save the cursor position to be restored later
-
         System.out.print("\u001b[0;0H");// Move to local top left of the screen
-//        System.out.print("\u001b[999999;999999H");// Move to local top left of the screen
-        UI.moveCR(500);
+        System.out.print("\n"+message);
+        System.out.print("\u001b[999999;999999H");// Move to local bottom right of the screen
+//        UI.moveCR(500);//TODO: repeat until found or infinite
+//        UI.moveCD(500);//TODO: repeat until found or infinite
         String read = null;
         try {
-//            Runtime.getRuntime().exec(cmd2).waitFor();
-            System.out.print("\u001b[6n"+"\n\n\n\n\n\n\n\n\n");// Request cursor position
-
+//            System.out.print("\u001b[0;0H");// Move to local top left of the screen
+            System.out.print("\u001B[6n");//+"Press enter so the editor can know your screen dimensions: ");// Request cursor position
+            System.out.print("\u001b[0;0H");// Move to local top left of the screen
             read = getInput();
         } catch (Exception e) {
             e.printStackTrace();
         }
         System.out.print("\u001b[0;0H");
         System.out.print("\u001b[u");//Restore the cursor position using saved position
-//        read
-
-        System.out.println("__"+read+"__");
-//        [[1;134R
         int columns = Integer.parseInt(read.substring(read.indexOf(";")+1,read.length()-1));
-        int rows = 0;
-        return new Dimension(columns,-1);
+        int rows = Integer.parseInt(read.substring(2, read.indexOf(";")));
+
+        UI.clear();
+        return new Dimension(columns,rows);
     }
 // CURSOR CONTROL
     
@@ -85,7 +79,7 @@ private static String getInput() {
         System.out.print(printHolder);
     }
     public static void moveCL(int times){
-        String printHolder = "";//Store as variable to avoid unnecessary calls to System
+        String printHolder = "";//Store as vdariable to avoid unnecessary calls to System
         for(int i = 0; i < times; i++){
             printHolder+="\u001B[D";
         }

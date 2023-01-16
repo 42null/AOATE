@@ -1,27 +1,20 @@
+import java.awt.*;
 import java.io.IOException;
 
 class Main {
 
     public static void main(String[] args) {
+        String toOpenFilePath = args.length>0 ? args[0] : "./Directory/exampleFile4.txt";
+        System.out.print("\u001b[0;0H");// Move to local top left of the screen/TODO: MAKE IN UI
+        UI.clear();
+        Dimension terminalDimensions = UI.getTerminalDimensions("Press enter to open the file \""+toOpenFilePath+"\" or ctrl+c to cancel:");
+        int terminalWidth = (int) terminalDimensions.getWidth();
+        int terminalHeight = (int) terminalDimensions.getHeight();
 
-        try {
-//            System.out.println(TerminalTest.getWidth());
-//            System.out.println(TerminalTest.getTerminalWidth());
-            int terminalWidth = (int) UI.getTerminalDimensions().getWidth();
-            for (int i = 0; i < terminalWidth; i++) {
-                System.out.print("_");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-        Edit curFil = openFile( args.length>0 ? args[0] : "./Directory/exampleFile4.txt");
+        Edit curFil = openFile(toOpenFilePath, terminalWidth, terminalHeight);
         int exitCode;
-
         do{
             UI.clear();
-
             curFil.printFile();
             for (int i = 0; i < curFil.getListSize(); i++) {
                 UI.moveCU();
@@ -42,8 +35,8 @@ class Main {
 //        }
 //    }
 
-    private static Edit openFile(String fileLocation){
-        Edit openedFile = new Edit(fileLocation);
+    private static Edit openFile(String fileLocation, int terminalWidth, int terminalHeight){
+        Edit openedFile = new Edit(fileLocation, terminalWidth, terminalHeight);
         return openedFile;
     }
 
