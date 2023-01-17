@@ -1,0 +1,4 @@
+# Ignore all compiled java files
+*.class
+Java-Based-File-Editor.iml
+.idea/

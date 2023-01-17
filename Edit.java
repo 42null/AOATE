@@ -42,6 +42,7 @@ class Edit {
 
         int savePos = pos;
         boolean moveBack = true;
+        byte didntOverflow = 0;
 
         do{
 
@@ -117,10 +118,13 @@ class Edit {
                     }
 
                     savePos = pos;
-                }else if(cCmd[1]=='C'){//RIGHT
+                }else if(cCmd[1]=='C') {//RIGHT
                     String backspaces = "";
 
-                    if(pos > this.columns-lineOverflowLeftIndicator.length()-lineOverflowLeftIndicator.length()){
+                    if (pos > this.columns - lineOverflowLeftIndicator.length() - lineOverflowLeftIndicator.length() - 1) {
+                        if(pos == this.columns - lineOverflowLeftIndicator.length() - lineOverflowLeftIndicator.length() - 1){
+                            pos++;
+                        }
                         UI.moveCL(500);
                         for (int i = 0; i < this.columns; i++) {
                             System.out.print(" ");
@@ -132,45 +136,44 @@ class Edit {
 //
 //                            }
 //                        }
-                        int spacesOut = pos-lineOverflowLeftIndicator.length()-lineOverflowRightIndicator.length();
-
+//                        int spacesOut = pos-lineOverflowLeftIndicator.length()-lineOverflowRightIndicator.length();
+//                        moveBack = false;//TODO: Change/rename/Use over variable
 //                        String lineOut;//=listOfLines.get(line).substring(spacesOut,(Math.min(listOfLines.get(line).length()-1,spacesOut+this.columns-lineOverflowLeftIndicator.length())));
-
-                        int substringStart = pos+lineOverflowLeftIndicator.length();
-
+                        didntOverflow = 2;
+//                        int spaceUseable = this.columns-lineOverflowLeftIndicator.length()-lineOverflowRightIndicator.length();
                         System.out.print(lineOverflowLeftIndicator);
-                        System.out.print(listOfLines.get(line).substring(substringStart,Math.min(listOfLines.get(line).length()-2,substringStart+columns-lineOverflowLeftIndicator.length()-lineOverflowRightIndicator.length())));
-                        System.out.print(lineOverflowRightIndicator);
-                        UI.moveCL(this.columns-lineOverflowLeftIndicator.length());
-                    }else{
+//                        System.out.print(listOfLines.get(line).substring(substringStart,Math.min(listOfLines.get(line).length()-2,substringStart+columns-lineOverflowLeftIndicator.length()-lineOverflowRightIndicator.length())));
+                        System.out.print(listOfLines.get(line).substring(pos + 2 - this.columns + lineOverflowLeftIndicator.length() + lineOverflowRightIndicator.length(), pos+1));
+                        System.out.print(" "+lineOverflowRightIndicator);
+                        UI.moveCL(lineOverflowRightIndicator.length());
+                    } else {
                         UI.moveBack(4);
                         rewrite4Press();
                         UI.moveCR();
                     }
-                    if(pos > listOfLines.get(line).length()-1){
+                    if (pos > listOfLines.get(line).length() - 1) {
 //                        pos = listOfLines.get(line).length()-2;
-                        while(pos > 0){//For some reason having this only here works
+                        while (pos > 0) {//For some reason having this only here works
                             pos--;
-                            backspaces+="\b";
+                            backspaces += "\b";
                         }
-                        pos=0;
+                        pos = 0;
                         UI.moveCR();
-                    }else{
+                    } else {
                         pos++;
                     }
 
-                    while(pos > listOfLines.get(line).length()){//For some reason having this only here works
-                        pos--;
-                        backspaces+="\b";
-                    }
-
-                    if(pos==0){
-                        if(++line < listOfLines.size()){
+//                    while(pos > listOfLines.get(line).length()){//For some reason having this only here works
+//                        pos--;
+//                        backspaces+="\b";
+//                    }
+                    if (pos == 0) {
+                        if (++line < listOfLines.size()) {
                             UI.moveCD();
                             UI.moveCL();
                             UI.moveCL();
                             System.out.print(backspaces);
-                        }else{
+                        } else {//TODO: Move out of needing if in else
                             line--;//TODO://See if this is more efficient
                             pos = listOfLines.get(line).length();
                             UI.moveCL();
@@ -180,7 +183,11 @@ class Edit {
                     savePos = pos;
                 }
                 if(moveBack){
-                    UI.moveBack(4);
+                    if(didntOverflow>0){
+                        didntOverflow--;
+                    }else{
+                        UI.moveBack(4);
+                    }
                 }else{
                     moveBack = false;//This way for efficiency
                 }
