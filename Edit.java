@@ -98,54 +98,80 @@ class Edit {
                         }
                     }
 
-                }else if(cCmd[1]=='D'){//LEFT
-                    UI.moveBack(4);
-                    rewrite4Press();
-                    UI.moveCL();
-                    pos--;
+                }else if(cCmd[1]=='D') {//LEFT
+                    if(pos == this.columns - lineOverflowLeftIndicator.length()-2){
+                        //If moveing from needing left indicator to not
+                        //Moves to front of line and writes over left indicator
+                        UI.moveCL(pos+lineOverflowLeftIndicator.length()+1);
+                        System.out.print(listOfLines.get(line).substring(0,lineOverflowLeftIndicator.length()));
+                        UI.moveCR(pos-lineOverflowLeftIndicator.length());
+                        System.out.print(listOfLines.get(line).substring(pos,pos+2));
+                        System.out.print(lineOverflowRightIndicator);
+                        UI.moveCL(lineOverflowRightIndicator.length()+1);
+//                        pos--;
+                    }else if (pos > this.columns - lineOverflowLeftIndicator.length() - lineOverflowLeftIndicator.length() - 1) {
+                        pos--;
+//                        TODO: Make this section more efficient and not use moveCL
+                        UI.moveCL(this.columns);
+                        for (int i = 0; i < this.columns; i++) {
+                            System.out.print(" ");
+                        }
+                        UI.moveCL(this.columns);
+                        didntOverflow = 2;
 
-                    if(pos==-1){
-                        if(--line == -1){//Move to < for slightly less efficient but better at correcting?
-                            pos=0;
-                        }else{
-                            UI.moveCU();
-                            String moveForwards = "";
-                            while(pos < listOfLines.get(line).length()){
-                                moveForwards+="\u001B[C";
-                                pos++;
+                        if (pos == listOfLines.get(line).length()) {//Wraps to a new line
+//                            tempTest = true;
+                            System.out.print(listOfLines.get(line).substring(0, this.columns - lineOverflowRightIndicator.length()) + lineOverflowRightIndicator);
+                        } else {//Reprint remaining of line
+                            String printLine = listOfLines.get(line).substring(pos + 2 - this.columns + lineOverflowLeftIndicator.length() + lineOverflowRightIndicator.length(), pos + 1);
+                            System.out.print(lineOverflowLeftIndicator + printLine + " " + lineOverflowRightIndicator);
+                            UI.moveCL(lineOverflowRightIndicator.length());
+                        }
+                    }else{//"Original"
+                        UI.moveBack(4);
+                        rewrite4Press();
+                        UI.moveCL();
+                        pos--;
+
+                        if(pos==-1){
+                            if(--line == -1){//Move to < for slightly less efficient but better at correcting?
+                                pos=0;
+                            }else{
+                                UI.moveCU();
+                                String moveForwards = "";
+                                while(pos < listOfLines.get(line).length()){
+                                    moveForwards+="\u001B[C";
+                                    pos++;
+                                }
+                                System.out.print(moveForwards);
                             }
-                            System.out.print(moveForwards);
                         }
                     }
-
                     savePos = pos;
                 }else if(cCmd[1]=='C') {//RIGHT
                     String backspaces = "";
                     if (pos > this.columns - lineOverflowLeftIndicator.length() - lineOverflowLeftIndicator.length() - 1) {
-                        if(pos == this.columns - lineOverflowLeftIndicator.length() - lineOverflowLeftIndicator.length() - 1){
-                            pos++;
-                        }
-                        UI.moveCL(999);
+
+//                        TODO: Make this section more efficient and not use moveCL
+                        UI.moveCL(this.columns);
                         for (int i = 0; i < this.columns; i++) {
                             System.out.print(" ");
                         }
-                        UI.moveCL(999);
+                        UI.moveCL(this.columns);
                         didntOverflow = 2;
 
-                        try{
+                        if(pos == listOfLines.get(line).length()){//Wraps to a new line
+                            tempTest = true;
+                            System.out.print(listOfLines.get(line).substring(0, this.columns - lineOverflowRightIndicator.length()) + lineOverflowRightIndicator);
+                        }else{//Reprint remaining of line
                             String printLine = listOfLines.get(line).substring(pos + 2 - this.columns + lineOverflowLeftIndicator.length() + lineOverflowRightIndicator.length(), pos+1);
                             System.out.print(lineOverflowLeftIndicator+printLine+" "+lineOverflowRightIndicator);
                             UI.moveCL(lineOverflowRightIndicator.length());
-                        }catch(StringIndexOutOfBoundsException e){
-                            tempTest = true;
-                            System.out.print(listOfLines.get(line).substring(0,this.columns-lineOverflowRightIndicator.length())+lineOverflowRightIndicator);
                         }
                     } else {
                         UI.moveBack(4);
                         if(tempTest){
                             tempTest = false;
-//                            UI.moveBack(2);
-//                            rewriteNumPress(1);
                             UI.moveCL();
                             System.out.print(listOfLines.get(line).substring(0, Math.min(listOfLines.get(line).length(), 4)));
                             UI.moveCL(Math.min(listOfLines.get(line).length(), 4));
