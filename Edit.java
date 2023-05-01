@@ -15,6 +15,8 @@ class Edit {
     private String lineOverflowRightIndicator = "..>";
     private int columns = -1;
     private int rows = -1;
+    
+    private String lastDebugMsg = "not yet set";
 
     public Edit(String filePath, int columns, int rows){
         this.filePath = filePath;
@@ -99,7 +101,8 @@ class Edit {
                     }
 
                 }else if(cCmd[1]=='D') {//LEFT
-                    if(pos == this.columns - lineOverflowLeftIndicator.length()-2){
+                    if(pos == this.columns - lineOverflowLeftIndicator.length()-2){//Changes made here !!! @@@@
+//                        System.out.println("!!!!!!!!!");
                         //If moveing from needing left indicator to not
                         //Moves to front of line and writes over left indicator
                         UI.moveCL(pos+lineOverflowLeftIndicator.length()+1);
@@ -109,8 +112,11 @@ class Edit {
                         System.out.print(lineOverflowRightIndicator);
                         UI.moveCL(lineOverflowRightIndicator.length()+1);
 //                        pos--;
-                    }else if (pos > this.columns - lineOverflowLeftIndicator.length() - lineOverflowLeftIndicator.length() - 1) {
                         pos--;
+                        lastDebugMsg = "A";
+                    }else if (pos > this.columns - lineOverflowLeftIndicator.length() - lineOverflowLeftIndicator.length() - 0) {
+                        pos--;
+                        lastDebugMsg = "E";
 //                        TODO: Make this section more efficient and not use moveCL
                         UI.moveCL(this.columns);
                         for (int i = 0; i < this.columns; i++) {
@@ -120,18 +126,21 @@ class Edit {
                         didntOverflow = 2;
 
                         if (pos == listOfLines.get(line).length()) {//Wraps to a new line
-//                            tempTest = true;
+                            tempTest = true;
+UI.clear();                            UI.moveCD(5);
+                            lastDebugMsg = "C";
                             System.out.print(listOfLines.get(line).substring(0, this.columns - lineOverflowRightIndicator.length()) + lineOverflowRightIndicator);
                         } else {//Reprint remaining of line
                             String printLine = listOfLines.get(line).substring(pos + 2 - this.columns + lineOverflowLeftIndicator.length() + lineOverflowRightIndicator.length(), pos + 1);
                             System.out.print(lineOverflowLeftIndicator + printLine + " " + lineOverflowRightIndicator);
                             UI.moveCL(lineOverflowRightIndicator.length());
+                            lastDebugMsg = "F";
                         }
                     }else{//"Original"
+                        pos--;
                         UI.moveBack(4);
                         rewrite4Press();
                         UI.moveCL();
-                        pos--;
 
                         if(pos==-1){
                             if(--line == -1){//Move to < for slightly less efficient but better at correcting?
@@ -143,9 +152,10 @@ class Edit {
                                     moveForwards+="\u001B[C";
                                     pos++;
                                 }
-                                System.out.print(moveForwards);
+                                System.out.print(moveForwards);//here
                             }
                         }
+                        lastDebugMsg = "D";
                     }
                     savePos = pos;
                 }else if(cCmd[1]=='C') {//RIGHT
@@ -243,6 +253,7 @@ class Edit {
 //                        System.out.print("\n\n\n\n\n\n"+listOfLines);
                         UI.clear();
                         System.out.println(pos);
+                        System.out.println(lastDebugMsg);
                         break;
                     case 3: //ctrl+c
                         UI.clear();
