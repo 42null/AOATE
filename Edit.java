@@ -137,8 +137,8 @@ UI.clear();                            UI.moveCD(5);
                             lastDebugMsg = "F";
                         }
                     }else{//"Original"
-                        pos--;
                         UI.moveBack(4);
+                        pos--;
                         rewrite4Press();
                         UI.moveCL();
 
