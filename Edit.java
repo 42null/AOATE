@@ -108,13 +108,13 @@ class Edit {
                         UI.moveCL(pos+lineOverflowLeftIndicator.length()+1);
                         System.out.print(listOfLines.get(line).substring(0,lineOverflowLeftIndicator.length()));
                         UI.moveCR(pos-lineOverflowLeftIndicator.length());
-                        System.out.print(listOfLines.get(line).substring(pos,pos+2));
+                        System.out.print(listOfLines.get(line).substring(pos+1,pos+1));
                         System.out.print(lineOverflowRightIndicator);
                         UI.moveCL(lineOverflowRightIndicator.length()+1);
 //                        pos--;
                         pos--;
                         lastDebugMsg = "A";
-                    }else if (pos > this.columns - lineOverflowLeftIndicator.length() - lineOverflowLeftIndicator.length() - 0) {
+                    }else if (pos > this.columns - lineOverflowLeftIndicator.length() - lineOverflowLeftIndicator.length()) {
                         pos--;
                         lastDebugMsg = "E";
 //                        TODO: Make this section more efficient and not use moveCL
@@ -138,8 +138,16 @@ UI.clear();                            UI.moveCD(5);
                         }
                     }else{//"Original"
                         UI.moveBack(4);
+//                        pos--;
+//                        TAKE CARE OF rewrite with: TDO:Move
+                        if(pos == rows-lineOverflowLeftIndicator.length()){
+                            System.out.print(".]\n\n\n\n\n..");
+                            UI.moveCL(4);
+                            lastDebugMsg = "Z";
+                        }else{
+                            rewrite4Press();
+                        }
                         pos--;
-                        rewrite4Press();
                         UI.moveCL();
 
                         if(pos==-1){
@@ -155,7 +163,7 @@ UI.clear();                            UI.moveCD(5);
                                 System.out.print(moveForwards);//here
                             }
                         }
-                        lastDebugMsg = "D";
+//                        lastDebugMsg = "D";
                     }
                     savePos = pos;
                 }else if(cCmd[1]=='C') {//RIGHT
