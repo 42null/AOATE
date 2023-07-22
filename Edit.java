@@ -107,8 +107,9 @@ class Edit {
                         //Moves to front of line and writes over left indicator
                         UI.moveCL(pos+lineOverflowLeftIndicator.length()+1);
                         System.out.print(listOfLines.get(line).substring(0,lineOverflowLeftIndicator.length()));
+//                        System.out.print("::::::::::::::::::::");
                         UI.moveCR(pos-lineOverflowLeftIndicator.length());
-                        System.out.print(listOfLines.get(line).substring(pos+1,pos+1));
+                        System.out.print(listOfLines.get(line).substring(pos,pos+2));
                         System.out.print(lineOverflowRightIndicator);
                         UI.moveCL(lineOverflowRightIndicator.length()+1);
 //                        pos--;
@@ -137,17 +138,17 @@ UI.clear();                            UI.moveCD(5);
                             lastDebugMsg = "F";
                         }
                     }else{//"Original"
+                        lastDebugMsg = "G";
                         UI.moveBack(4);
 //                        pos--;
 //                        TAKE CARE OF rewrite with: TDO:Move
-                        if(pos == rows-lineOverflowLeftIndicator.length()){
+                        if(pos == columns-lineOverflowLeftIndicator.length()-2){
                             System.out.print(".]\n\n\n\n\n..");
                             UI.moveCL(4);
                             lastDebugMsg = "Z";
                         }else{
                             rewrite4Press();
                         }
-                        pos--;
                         UI.moveCL();
 
                         if(pos==-1){
@@ -261,6 +262,8 @@ UI.clear();                            UI.moveCD(5);
 //                        System.out.print("\n\n\n\n\n\n"+listOfLines);
                         UI.clear();
                         System.out.println(pos);
+                        System.out.println(listOfLines.get(line).length());
+                        System.out.println(listOfLines.get(line).length()-lineOverflowLeftIndicator.length()-lineOverflowRightIndicator.length());
                         System.out.println(lastDebugMsg);
                         break;
                     case 3: //ctrl+c
